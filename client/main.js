@@ -8,7 +8,8 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
     .state('home', {
       url: '/',
       templateUrl: 'templates/home.html',
-      restricted: true
+      restricted: false,
+      controller: 'stockController as sc'
     })
     .state('login', {
       url: '/login',

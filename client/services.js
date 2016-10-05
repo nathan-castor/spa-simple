@@ -118,27 +118,43 @@ angular.module('myApp').factory('AuthService',
 
 }])
 
-(function(){
-  angular.module('myApp')
-    .factory('stockService', stockService)
+angular.module('myApp').factory('stockService',
+  ['$q', '$timeout', '$http',
+  function ($q, $timeout, $http) {
 
-  stockService.$inject = ['$http']
-
-  function stockService($http){
-    var apiStockUrl = '/api/scrape/stock'
-    var apiUserUrl = '/api/users/'
-    var service = {
+    var apiStockUrl = '/user/scrape/stock'
+    var apiUserUrl = '/user/'
+    // var service = {
+    //   index: index,
+    //   show: show,
+    //   create: create,
+    //   update: update,
+    //   destroy: destroy
+    // }
+    // return service
+    return ({
       index: index,
       show: show,
       create: create,
       update: update,
       destroy: destroy
-    }
-    return service
+    })
 
     // factory functions:
     function index(){
       return $http.get(apiStockUrl + 's')
+      // handle success
+      .success(function (data) {
+        if(data){
+          console.log('data',data)
+        } else {
+          console.log('error at get stocks?')
+        }
+      })
+      // handle error
+      .error(function (data) {
+          console.log('error:',data)
+      })
     }
 
     function show(id){
@@ -157,5 +173,4 @@ angular.module('myApp').factory('AuthService',
     function destroy(id){
       return $http.delete(apiUserUrl + id + '/removestock')
     }
-  }
-})()
+}])

@@ -10,7 +10,7 @@ angular.module('myApp')
   loginController.$inject = ['$state', 'AuthService']
   logoutController.$inject = ['$state', 'AuthService']
   registerController.$inject = ['$state', 'AuthService']
-  stockController.$inject = ['stockService', '$state', '$stateParams', '$scope', 'userService', '$window']
+  stockController.$inject = ['stockService', '$state', '$stateParams', '$scope', '$window']
   
 
 function mainController($rootScope, $state, AuthService) {
@@ -94,7 +94,7 @@ function registerController($state, AuthService) {
   }
 }
 
-function StockController(stockService, $state, $stateParams, $scope, userService, $window){
+function stockController(stockService, $state, $stateParams, $scope, $window){
   var vm = this
   vm.title = "Stock Controller"
   vm.newStock = {}

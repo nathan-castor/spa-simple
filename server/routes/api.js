@@ -3,6 +3,7 @@ var router = express.Router()
 var passport = require('passport')
 
 var User = require('../models/User.js')
+var stockCtrl = require('../controllers/stock.server.controller.js')
 
 router.post('/register', function(req, res) {
   User.register(new User({ username: req.body.username }),
@@ -62,6 +63,34 @@ router.get('/status', function(req, res) {
     user: req.user
   })
 })
+
+// ////////////////////////////////////////////
+// ////////////////////////////////////////////
+// ////////////////////////////////////////////
+// ////////////////////////////////////////////
+// routes to use the API to get stock information
+// routes to use the API to get stock information
+router.route('/scrape/stocks')
+  // .get(stockCtrl.indexCompanies)
+  .get(stockCtrl.getAll)
+  .post(stockCtrl.postAll)
+  .patch(stockCtrl.updateAll)
+
+router.route('/scrape/stocks/show')
+  .get(stockCtrl.showCompany)
+  .post(stockCtrl.postCompany)
+
+router.route('/scrape/stock/:company/:id')
+  .patch(stockCtrl.updateCompany)
+
+
+// are my routes conflicting?????
+router.route('/scrape/stock/:id')
+  .get(stockCtrl.showStock)
+  .delete(stockCtrl.deleteStock)
+
+router.route('/scrape/analysts')
+  .get(stockCtrl.indexAnalysts)
 
 
 module.exports = router
