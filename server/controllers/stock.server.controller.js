@@ -13,6 +13,7 @@ var updateAllCount = 0
 var incorrectNameList = []
 
 function getCompanyDetails(tickerOrName,callback){
+  'use strict';
   var company = {}
   company.symbol = tickerOrName
   // url for analysts information
@@ -21,7 +22,7 @@ function getCompanyDetails(tickerOrName,callback){
 	console.log('url1***',url1)
   request(url1, function(error, response, html){
     if(!error){
-      var $ = cheerio.load(html,{
+      let $ = cheerio.load(html,{
         normalizeWhitespace: true
       });
 
@@ -56,36 +57,36 @@ function getCompanyDetails(tickerOrName,callback){
       console.log('aveTGT',totalTGT/count);
       company.aveTGT = totalTGT/count;
       // request the yahoo API for stock price
-      var yhooAPI = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22'+company.ticker+'%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=';
+      var priceUrl = 'http://www.nasdaq.com/symbol/'+company.symbol;
       var urlTreasury = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22^TNX%22)&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=';
-      // URL to scrape for the stock beta
-      var urlTwo = 'https://finance.yahoo.com/q?s='+company.ticker;
 
-      scrape(urlTwo, ['tr'], function (error, trs) {
-        if(error) throw error;
-        var indexedEl = [];
-        trs.forEach(function (element, idx) {
-          indexedEl.push(element.html());
-          console.log('  %d. %s', idx, element.html());
-          }
-        });
+      request(priceUrl, function (error, response, html) {
+        if (!error && response.statusCode == 200) {
+          let $ = cheerio.load(html,{
+            normalizeWhitespace: true
+          });
 
-        company.price = parseFloat(indexedEl[3]);
-        company.beta = parseFloat(indexedEl[7]);
-        // request(yhooAPI, function(error, response, html) {
-          // if(!error){
-          //   var dataTwo = response;
-          //   company.price = parseFloat(JSON.parse(dataTwo.body).query.results.quote.LastTradePriceOnly);
-            request(urlTreasury, function(error, response, html) {
-              if(!error){
-                var dataFour = response;
-                company.treasuryYield = parseFloat(JSON.parse(dataFour.body).query.results.quote.LastTradePriceOnly);
-                callback(company);
-              }
-            });
-          // }
-        // });
-      });
+          // let $table = $('.genTable > table');
+          // // console.log('TABLE', $table.html());
+          let dataTwo = $('tbody > tr');
+          console.log('dataTwo',dataTwo.html()); 
+          var dataIndex = []
+          dataTwo.children('td').each(function(index, el){
+            dataIndex.push($(el).text())
+            // console.log('*****tr from****',index, $(el).text()) //.replace(/\D/g, '')
+          })
+          console.log('price:',parseFloat(dataIndex[13].replace(/\$/g, "").trim()))
+          company.price = parseFloat(dataIndex[13].replace(/\$/g, "").trim())
+          company.beta = parseFloat(dataIndex[33])
+          request(urlTreasury, function(error, response, html) {
+            if(!error){
+              var dataFour = response;
+              company.treasuryYield = parseFloat(JSON.parse(dataFour.body).query.results.quote.LastTradePriceOnly);
+              callback(company);
+            }
+          }); // REQ TREASURY
+        }
+      }); // PRICE IF NO ERROR
     }
   });
 }
@@ -107,7 +108,7 @@ module.exports = {
         StockExchange: company.StockExchange,
         analysts: company.analysts
       }
-      console.log("newCompany",newCompany)
+      // console.log("newCompany::",newCompany.symbol, newCompany.beta, newCompany.price)
       res.json({newCompany:newCompany})
     })
   },
