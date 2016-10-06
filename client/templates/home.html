@@ -10,13 +10,6 @@
 
 <h3>Choose some stocks</h3>
 
-<!-- <ul class="collection with-header">
-  <li class="collection-header"><h5>Available Stocks</h5></li>
-  <li class="collection-item"><div>AAPL<a href="#!" class="secondary-content"><i class="material-icons">Add</i></a></div></li>
-  <li class="collection-item"><div>YHOO<a href="#!" class="secondary-content"><i class="material-icons">Add</i></a></div></li>
-  <li class="collection-item"><div>GOOG<a href="#!" class="secondary-content"><i class="material-icons">Add</i></a></div></li>
-  <li class="collection-item"><div>FB<a href="#!" class="secondary-content"><i class="material-icons">Add</i></a></div></li>
-</ul> -->
 <div ng-controller="stockController as sc">
 
   <label>Search: <input ng-model="searchText"></label>
@@ -26,22 +19,18 @@
               <th>#</th>
               <th>Stock</th>
               <th>Ave TGT</th>
-              <th>Beta</th>
-              <!-- <th>Buy/Sell</th> -->
-              <!-- <th>
-                Add
-              </th> -->
+              <th>Buy/Sell</th>
+              <!-- <th>Add</th> -->
           </tr>
       </thead>
 
       <tbody>
           <tr ng-repeat="s in sc.stocks | filter:searchText">
               <td>{{$index + 1}}</td>
-              <td><a ui-sref="stockdetail({id: s._id})">{{s.symbol}}</a></td>
+              <td><a ui-sref="stock({id: s._id})">{{s.symbol}}</a></td>
               <td>{{s.aveTGT.toFixed(2)}}</td>
-              <td>{{s.beta}}</td>
-              <!-- <td ng-if="sc.buySell()">Buy!</td>
-              <td ng-if="!sc.buySell()">Sell</td> -->
+              <td ng-if="sc.buySell()">Buy!</td>
+              <td ng-if="!sc.buySell()">Sell</td>
               <!-- <td><a class="pure-button pure-button-primary">Add</a></td> -->
           </tr>
           <!-- ng-click="main.update(detail.user._id,s._id)" -->

@@ -10,7 +10,7 @@ angular.module('myApp')
   loginController.$inject = ['$state', 'AuthService']
   logoutController.$inject = ['$state', 'AuthService']
   registerController.$inject = ['$state', 'AuthService']
-  stockController.$inject = ['stockService', '$state', '$stateParams', '$scope', '$window']
+  stockController.$inject = ['stockService', 'AuthService', '$state', '$stateParams', '$scope', '$window']
   
 
 function mainController($rootScope, $state, AuthService) {
@@ -22,6 +22,18 @@ function mainController($rootScope, $state, AuthService) {
         vm.currentUser = data.data.user
       })
   })
+  vm.loggedIn = function() {
+    if (AuthService.isLoggedIn()) {
+      // console.log('user',vm.currentUser)
+      return true;
+    }else{
+      // console.log('loggedIn didnt work or not logged in')
+      return false;
+    }
+  }
+  vm.logout = function() {
+    AuthService.logout()
+  }
 }
 
 // LOGIN CONTROLLER:
@@ -94,22 +106,27 @@ function registerController($state, AuthService) {
   }
 }
 
-function stockController(stockService, $state, $stateParams, $scope, $window){
+function stockController(stockService, AuthService, $state, $stateParams, $scope, $window){
   var vm = this
   vm.title = "Stock Controller"
   vm.newStock = {}
   vm.stocks = []
   vm.stock = {}
 
+  AuthService.getUserStatus()
+      .then(function(data){
+        vm.currentUser = data.data.user
+      })
+
   stockService.index().success(function(results){
     vm.stocks = results
     //console.log(results);
   })
 
-  //console.log("state",$state.current.name);
-  if ($state.current.name == 'stockdetail') {
+  console.log("state",$state.current.name);
+  if ($state.current.name == 'stock') {
     stockService.show($stateParams.id).success(function(results){
-      //console.log("this here is the vm.stock",vm.stock)
+      console.log("stock",vm.stock)
       vm.stock = results
     })
   }
@@ -146,17 +163,7 @@ function stockController(stockService, $state, $stateParams, $scope, $window){
 
   // find a way to run this after the page loads, it's being called on stockdetails view
   vm.isStocked = function(stock) {
-    //console.log("the vm.user in StockCtrl:", vm.user);
-    //console.log("the userPortfolio in localStorage:", $window.localStorage['userPortfolio']);
-    //$scope.$parent.global.user
-    if (stock && $window.localStorage['currentUser']) {
-      var portF = $window.localStorage['userPortfolio'].split(',')
-      //console.log("portF",portF);
-      if ($window.localStorage['userPortfolio'].indexOf(stock) != -1) {
-          return true
-        }
-        return false
-    }
+    return vm.stock
   }
 
 }

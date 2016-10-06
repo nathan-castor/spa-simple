@@ -1,10 +1,11 @@
 #!/usr/bin/env node
+require('dotenv').config();
 var port = process.env.PORT || 3000
 
 // dependencies
 var express = require('express')
 var logger = require('morgan')
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser')
 var expressSession = require('express-session')
 var mongoose = require('mongoose')
@@ -12,11 +13,16 @@ var hash = require('bcrypt-nodejs')
 var path = require('path')
 var passport = require('passport')
 var passportConfig = require('./config/passport.js')
+var cors = require('cors');
+
+var DB_URL = process.env.MLAB_LINK || 'mongodb://localhost/portfolioDB'
+var DB_LOCAL = 'mongodb://localhost/portfolioDB'
+  console.log("DB_URL:",DB_URL)
 
 // mongoose
-mongoose.connect('mongodb://localhost/mean-auth', function(err) {
+mongoose.connect(DB_URL, function(err) {
   if(err) return console.log(err)
-  console.log("Connected to MongoDB (mean-auth)")
+  console.log("Connected to database:",DB_URL)
 })
 
 // user schema/model
@@ -29,6 +35,7 @@ var app = express()
 var routes = require('./routes/api.js')
 
 // define middleware
+app.use(cors())
 app.use(express.static(path.join(__dirname, '../client')))
 app.use(logger('dev'))
 app.use(bodyParser.json())

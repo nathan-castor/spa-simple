@@ -124,14 +124,7 @@ angular.module('myApp').factory('stockService',
 
     var apiStockUrl = '/user/scrape/stock'
     var apiUserUrl = '/user/'
-    // var service = {
-    //   index: index,
-    //   show: show,
-    //   create: create,
-    //   update: update,
-    //   destroy: destroy
-    // }
-    // return service
+
     return ({
       index: index,
       show: show,
@@ -146,7 +139,7 @@ angular.module('myApp').factory('stockService',
       // handle success
       .success(function (data) {
         if(data){
-          console.log('data',data)
+          // console.log('data',data)
         } else {
           console.log('error at get stocks?')
         }

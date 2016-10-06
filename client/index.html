@@ -8,8 +8,41 @@
   <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.6/yeti/bootstrap.min.css" rel="stylesheet">
 </head>
 
-  <div class="container" ng-controller="mainController as main">
-    Logged in user: {{ main.currentUser.username }}
+<body ng-controller="mainController as main">
+
+  <!-- bootstrap nav bar -->
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" ui-sref="home">SPA</a>
+      </div>
+        <ul class="nav navbar-nav navbar-right">
+
+          <li ng-if="main.loggedIn()">
+            <a ui-sref="portfolio({id: main.currentUser._id})">Portfolio</a>
+            <!--ng-click="main.logUser()""-->
+          </li>
+          <li ng-if="main.loggedIn()">
+            <a ui-sref="profile">Profile</a>
+            <!--ng-click="main.logUser()""-->
+          </li>
+
+          <li ng-if="!main.loggedIn()">
+            <a ui-sref="login">Log In</a>
+          </li>
+          <li ng-if="!main.loggedIn()">
+            <a ui-sref="register">Sign Up</a>
+          </li>
+          <li ng-if="main.loggedIn()">
+            <a ng-click="main.logout()">Log Out</a>
+          </li>
+        </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    Logged in user: {{ main.currentUser.username }} <br>
+    Logged in?: {{ main.loggedIn() }}
     <div ui-view></div>
   </div>
 

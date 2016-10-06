@@ -69,10 +69,9 @@ router.get('/status', function(req, res) {
 // ////////////////////////////////////////////
 // ////////////////////////////////////////////
 // routes to use the API to get stock information
-// routes to use the API to get stock information
 router.route('/scrape/stocks')
-  // .get(stockCtrl.indexCompanies)
-  .get(stockCtrl.getAll)
+  .get(stockCtrl.indexCompanies)
+  // .get(stockCtrl.getAll)
   .post(stockCtrl.postAll)
   .patch(stockCtrl.updateAll)
 

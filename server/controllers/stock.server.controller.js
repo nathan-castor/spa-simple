@@ -48,7 +48,7 @@ function getCompanyDetails(tickerOrName,callback){
           target: targetP,
           date: $(el).children('td:nth-child(6)').text()
         });
-        if (targetP) {
+        if (targetP) { 
           count++;
           totalTGT = parseFloat(totalTGT) + parseInt(targetP);
           // console.log("totalTGT",totalTGT);

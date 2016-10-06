@@ -9,7 +9,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
       url: '/',
       templateUrl: 'templates/home.html',
       restricted: false,
-      controller: 'stockController as sc'
+      controller: 'mainController as main'
     })
     .state('login', {
       url: '/login',
@@ -25,14 +25,15 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
       templateUrl: 'templates/register.html',
       controller: 'registerController as registerCtrl'
     })
-    .state('one', {
-      url: '/one',
-      template: '<h1>This is page one!</h1>'
+    .state('portfolio', {
+      url: '/portfolio',
+      template: '<h1>This is page portfolio!</h1>'
     })
-    .state('two', {
-      url: '/two',
-      template: '<h1>This is page two!</h1>',
-      restricted: true
+    .state('stock', {
+      url: '/stock/:id',
+      templateUrl: 'templates/stock.html',
+      controller: 'stockController as sc',
+      restricted: false
     })
     .state('profile', {
       url: '/profile',
