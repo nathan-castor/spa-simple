@@ -1,10 +1,9 @@
 <div>
-	<h1>stock:</h1>
-	<h2>{{ sc.stock.symbol }}</h2>
+	<h3>stock:</h3>
+	<h2>{{ sc.stock.companyName }}</h2>
 </div>
 
-<div class="container" ng-controller="mainController as main">
-  <h1>Stock Detail view</h1>
+<div class="container">
   <table class="table">
       <thead>
           <tr>
@@ -19,15 +18,15 @@
 
       <tbody>
           <tr>
-              <td>{{sc.stock.symbol}}</td>
-              <td>{{sc.stock.aveTGT.toFixed(2)}}</td>
-              <td ng-if="sc.buySell()">Buy!</td>
-              <td ng-if="!sc.buySell()">Sell</td>
+              <td><h4>{{sc.stock.symbol}}</h4></td>
+              <td><h4>{{sc.stock.aveTGT.toFixed(2)}}</h4></td>
+              <td ng-if="sc.buySell()"><h4><strong style="color:green;">Buy!</strong></h4></td>
+              <td ng-if="!sc.buySell()"><h4><strong style="color:red;">Sell</strong></h4></td>
               <td ng-if="sc.isStocked(sc.stock._id)">
-                <a class="pure-button pure-button-primary" ng-click="main.removeStock({stock:sc.stock._id})">Remove</a>
+                <a class="btn btn-primary" ng-click="sc.removeStock({stock:sc.stock._id})">Remove</a>
               </td>
               <td ng-if="!sc.isStocked(sc.stock._id)">
-                <a class="pure-button pure-button-primary" ng-click="main.addStock({stock:sc.stock._id})">Add</a>
+                <a class="btn btn-primary" ng-click="sc.addStock({stock:sc.stock._id})">Add</a>
               </td>
           </tr>
       </tbody>
@@ -39,15 +38,43 @@
       <thead>
           <tr>
               <th>#</th>
-              <th>analystSchema</th>
+              <th>Analyst</th>
               <th>Target Price</th>
               <th>date</th>
-              <th>Add/Remove</th>
+              <th ng-if="sc.isStocked(sc.stock._id)">Add/Remove</th>
           </tr>
       </thead>
-
-      <tbody>
+      <!-- THIS IF YOU DONT HAVE THE STOCK -->
+      <tbody ng-if="!sc.isStocked(sc.stock._id)">
           <tr ng-repeat="a in sc.stock.analysts">
+              <td>{{$index + 1}}</td>
+              <td><a>{{a.name}}</a></td>
+              <td>{{a.target.toFixed(2)}}</td>
+              <td>{{a.date}}</td>
+              <td ng-if="sc.isChsn(a._id)">
+                <a class="btn btn-primary" ng-click="sc.logAnlst(a.name)">-</a>
+              </td>
+          </tr>
+      </tbody>
+      <h3>This:{{sc.currentUser.sudoPrtfl[indexOf(stock[sc.stock._id])].anlsts.chsnAnlsts}}</h3>
+      <!-- THIS IF YOU HAVE THE STOCK -->
+      <tbody ng-if="sc.isStocked(sc.stock._id)">
+          <tr ng-repeat="a in sc.currentUser.sudoPrtfl[indexOf(stock[sc.stock._id])].anlsts.chsnAnlsts">
+              <td>{{$index + 1}}</td>
+              <td><a>{{a.name}}</a></td>
+              <td>{{a.target.toFixed(2)}}</td>
+              <td>{{a.date}}</td>
+              <!-- <td>
+                <a 
+                  ng-class="sc.isChsn(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
+                  ng-value="sc.isChsn(a._id) ? '+' : '-'" 
+                  ng-click="sc.logAnlst(a.name)"></a>
+              </td> -->
+              <td ng-if="sc.isChsn(a._id)">
+                <a class="btn btn-danger" ng-click="sc.logAnlst(a.name)">-</a>
+              </td>
+          </tr>
+          <tr ng-repeat="a in sc.currentUser.sudoPrtfl[indexOf(stock[sc.stock._id])].anlsts.notChsnAnlsts">
               <td>{{$index + 1}}</td>
               <td><a>{{a.name}}</a></td>
               <td>{{a.target.toFixed(2)}}</td>

@@ -163,7 +163,16 @@ angular.module('myApp').factory('stockService',
       return $http.patch(apiUserUrl + id, data)
     }
 
-    function destroy(id){
-      return $http.delete(apiUserUrl + id + '/removestock')
+    function destroy(id,data){
+      return $http.delete(apiUserUrl + id + '/removestock',data)
     }
+    // function addStock(data){
+    //   //console.log("made it to userService update!", data);
+    //   return $http.patch(apiUserUrl + data.id, data)
+    // }
+
+    // function removeStock(data){
+    //   //console.log("made it to userService update!", data);
+    //   return $http.patch(apiUserUrl + data.id + '/removestock', data)
+    // }
 }])

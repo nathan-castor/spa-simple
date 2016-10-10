@@ -13,11 +13,6 @@ var stockSchema = new Schema({
 	companyName: String,
 	symbol: String,
 	analysts: [analystSchema],
-  chosenAnalysts: [{
-    name: String,
-    tgt: Number,
-    weight: Number
-  }],
   wtdPrice: Number,
   price: Number,
   beta: Number,

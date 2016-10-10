@@ -19,18 +19,18 @@
               <th>#</th>
               <th>Stock</th>
               <th>Ave TGT</th>
-              <th>Buy/Sell</th>
+              <!-- <th>Buy/Sell</th> -->
               <!-- <th>Add</th> -->
           </tr>
       </thead>
 
       <tbody>
-          <tr ng-repeat="s in sc.stocks | filter:searchText">
+          <tr ng-repeat="s in sc.stocks | filter:searchText track by $index ">
               <td>{{$index + 1}}</td>
               <td><a ui-sref="stock({id: s._id})">{{s.symbol}}</a></td>
               <td>{{s.aveTGT.toFixed(2)}}</td>
-              <td ng-if="sc.buySell()">Buy!</td>
-              <td ng-if="!sc.buySell()">Sell</td>
+              <!-- <td ng-if="sc.buySell()">Buy!</td>
+              <td ng-if="!sc.buySell()">Sell</td> -->
               <!-- <td><a class="pure-button pure-button-primary">Add</a></td> -->
           </tr>
           <!-- ng-click="main.update(detail.user._id,s._id)" -->

@@ -33,7 +33,7 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
       url: '/stock/:id',
       templateUrl: 'templates/stock.html',
       controller: 'stockController as sc',
-      restricted: false
+      restricted: true
     })
     .state('profile', {
       url: '/profile',

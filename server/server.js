@@ -17,7 +17,7 @@ var cors = require('cors');
 
 var DB_URL = process.env.MLAB_LINK || 'mongodb://localhost/portfolioDB'
 var DB_LOCAL = 'mongodb://localhost/portfolioDB'
-  console.log("DB_URL:",DB_URL)
+  // console.log("DB_URL:",DB_URL)
 
 // mongoose
 mongoose.connect(DB_URL, function(err) {

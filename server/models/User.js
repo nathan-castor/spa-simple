@@ -8,12 +8,19 @@ var User = new Schema({
   username: String,
   password: String,
   prtfl: {
-    stock: {
+    stocks: [{
       type: Schema.ObjectId,
-      ref: 'Stock'
-    },
-    chsnanlysts: []
-  }
+      ref: 'Stock',
+      autopopulate: true
+    }]
+  },
+  sudoPrtfl:[
+  	// {
+  	// 	stock: String,
+  	// 	chsnAnlsts: [],
+  	// 	notChsnAnlsts: []
+  	// }
+  ]
 })
 
 User.plugin(passportLocalMongoose)

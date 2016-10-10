@@ -4,6 +4,7 @@ var passport = require('passport')
 
 var User = require('../models/User.js')
 var stockCtrl = require('../controllers/stock.server.controller.js')
+var userCtrl = require('../controllers/user.server.controller.js')
 
 router.post('/register', function(req, res) {
   User.register(new User({ username: req.body.username }),
@@ -66,6 +67,13 @@ router.get('/status', function(req, res) {
 
 // ////////////////////////////////////////////
 // ////////////////////////////////////////////
+
+router.route('/:id')
+  .patch(userCtrl.addStock)
+router.route('/:id/removeStock')
+  .delete(userCtrl.removeStock)
+
+
 // ////////////////////////////////////////////
 // ////////////////////////////////////////////
 // routes to use the API to get stock information
@@ -88,8 +96,8 @@ router.route('/scrape/stock/:id')
   .get(stockCtrl.showStock)
   .delete(stockCtrl.deleteStock)
 
-router.route('/scrape/analysts')
-  .get(stockCtrl.indexAnalysts)
+router.route('/scrape/stocknames')
+  .get(stockCtrl.indexStockNames)
 
 
 module.exports = router
