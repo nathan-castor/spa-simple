@@ -30,17 +30,23 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
       template: '<h1>This is page portfolio!</h1>'
     })
     .state('stock', {
-      url: '/stock/:id',
-      templateUrl: 'templates/stock.html',
-      controller: 'stockController as sc',
-      restricted: true
-    })
+        url: '/stock/:id',
+        templateUrl: 'templates/stock.html',
+        controller: 'stockController as sc',
+        resolve: {
+          user: function(AuthService) {
+            console.log('AuthService.getUserStatus()',AuthService.getUserStatus());
+            return AuthService.getUserStatus();
+          }
+      },
+        restricted: true
+      })
     .state('profile', {
       url: '/profile',
       templateUrl: 'templates/profile.html',
       restricted: true
     })
-    
+
 })
 
 myApp.run(function ($rootScope, $location, $state, AuthService) {
@@ -51,7 +57,7 @@ myApp.run(function ($rootScope, $location, $state, AuthService) {
       // console.log(toState)
       if (toState.restricted && !AuthService.isLoggedIn()){
         // $location.path('/login')
-        $state.go('login'); 
+        $state.go('login');
       }
     })
   })

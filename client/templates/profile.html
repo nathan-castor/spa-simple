@@ -1,1 +1,23 @@
 <h1>Current User: {{ main.currentUser.username }}</h1>
+<!-- <h1>Stocks: {{ main.currentUser.prtfl.stocks }}</h1> -->
+<div ng-controller="stockController as sc">
+	<table class="table">
+    <thead>
+      <tr>
+        <th>Stock</th>
+        <th>Index</th>
+        <th>Add/Remove from portfolio</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr ng-repeat="s in main.currentUser.prtfl.stocks | filter:searchText track by $index ">
+        <td>{{$index + 1}}</td>
+        <td><a ui-sref="stock({id: s})">{{s}}</a></td>
+        <td>
+          <a class="btn btn-danger" ng-click="sc.removeStock(s)">-</a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

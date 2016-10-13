@@ -55,6 +55,42 @@ module.exports = {
 				})
 			})
 	},
+	rmAnlst: function(req,res){
+		console.log('req.params.anlst:',req.params.anlst);
+		console.log('req.params.id:',req.params.id);
+		User.findOne({_id: req.params.id}, function(err, user){
+			if(err) return console.log("user, error",user,err)
+			console.log("user",user);
+			user.sudoPrtfl.forEach(function(el,idx) {
+				if (el.anlsts.chsnAnlsts.indexOf(req.params.anlst) != -1) {
+					user.sudoPrtfl.anlsts.chsnAnlsts.splice(idx,1)
+					user.sudoPrtfl.anlsts.notChsnAnlysts.push(req.params.anlst)
+				}
+			})
+			user.save(function(err, user){
+				if(err) return console.log(err)
+				console.log("moved anlst to notChsnAnlysts");
+				res.json(user)
+				})
+			})
+	},
+	addAnlst: function(req,res){
+		User.findOne({_id: req.params.id}, function(err, user){
+			if(err) return console.log("user, error",user,err)
+			console.log("user",user);
+			user.sudoPrtfl.forEach(function(el,idx) {
+				if (el.anlsts.notChsnAnlsts.indexOf(req.params.anlst) != -1) {
+					user.sudoPrtfl.anlsts.notChsnAnlsts.splice(idx,1)
+					user.sudoPrtfl.anlsts.chsnAnlysts.push(req.params.anlst)
+				}
+			})
+			user.save(function(err, user){
+				if(err) return console.log(err)
+				console.log("moved anlst to notChsnAnlysts");
+				res.json(user)
+				})
+			})
+	},
 
 	// delete a user
 	delete: function(req,res){

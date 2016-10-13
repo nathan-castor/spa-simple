@@ -73,7 +73,10 @@ router.route('/:id')
 router.route('/:id/removeStock')
   .delete(userCtrl.removeStock)
 
-
+router.route('/:id/addAnlst/:anlst')
+  .patch(userCtrl.addAnlst)
+router.route('/:id/rmAnlst/:anlst')
+  .delete(userCtrl.rmAnlst)
 // ////////////////////////////////////////////
 // ////////////////////////////////////////////
 // routes to use the API to get stock information

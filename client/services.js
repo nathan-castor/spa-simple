@@ -166,13 +166,11 @@ angular.module('myApp').factory('stockService',
     function destroy(id,data){
       return $http.delete(apiUserUrl + id + '/removestock',data)
     }
-    // function addStock(data){
-    //   //console.log("made it to userService update!", data);
-    //   return $http.patch(apiUserUrl + data.id, data)
-    // }
+    function addAnlst(id, data){
+      return $http.patch(apiUserUrl + id + '/addAnlst/'+data)
+    }
 
-    // function removeStock(data){
-    //   //console.log("made it to userService update!", data);
-    //   return $http.patch(apiUserUrl + data.id + '/removestock', data)
-    // }
+    function rmAnlst(id,data){
+      return $http.delete(apiUserUrl + id + '/rmAnlst/'+data)
+    }
 }])

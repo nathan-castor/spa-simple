@@ -1,6 +1,9 @@
 <div>
-	<h3>stock:</h3>
 	<h2>{{ sc.stock.companyName }}</h2>
+</div>
+<div>
+  <!-- <h2>is stocked?:{{ sc.isStocked(sc.stock._id) }}</h2> -->
+  <h3>sc.stocked: {{sc.stocked}}</h3>
 </div>
 
 <div class="container">
@@ -22,18 +25,18 @@
               <td><h4>{{sc.stock.aveTGT.toFixed(2)}}</h4></td>
               <td ng-if="sc.buySell()"><h4><strong style="color:green;">Buy!</strong></h4></td>
               <td ng-if="!sc.buySell()"><h4><strong style="color:red;">Sell</strong></h4></td>
-              <td ng-if="sc.isStocked(sc.stock._id)">
-                <a class="btn btn-primary" ng-click="sc.removeStock({stock:sc.stock._id})">Remove</a>
+              <td ng-show="sc.stocked == true">
+                <a class="btn btn-danger" ng-click="sc.removeStock({stock:sc.stock._id}); sc.stocked = false">Remove</a>
               </td>
-              <td ng-if="!sc.isStocked(sc.stock._id)">
-                <a class="btn btn-primary" ng-click="sc.addStock({stock:sc.stock._id})">Add</a>
+              <td ng-show="sc.stocked == false">
+                <a class="btn btn-primary" ng-click="sc.addStock({stock:sc.stock._id}); sc.stocked = true">Add</a>
               </td>
           </tr>
       </tbody>
   </table>
 
   <br><br>
-
+	<!-- THIS IS WHERE THE ANLST TABLE IS -->
   <table class="table">
       <thead>
           <tr>
@@ -41,46 +44,45 @@
               <th>Analyst</th>
               <th>Target Price</th>
               <th>date</th>
-              <th ng-if="sc.isStocked(sc.stock._id)">Add/Remove</th>
+              <th ng-if="sc.stocked">Add/Remove</th>
           </tr>
       </thead>
-      <!-- THIS IF YOU DONT HAVE THE STOCK -->
-      <tbody ng-if="!sc.isStocked(sc.stock._id)">
+      <!-- THIS IF YOU DONT HAVE THE STOCK REPEAT ALL ANSLT -->
+      <tbody ng-if="!sc.stocked">
           <tr ng-repeat="a in sc.stock.analysts">
               <td>{{$index + 1}}</td>
               <td><a>{{a.name}}</a></td>
               <td>{{a.target.toFixed(2)}}</td>
               <td>{{a.date}}</td>
-              <td ng-if="sc.isChsn(a._id)">
+              <td ng-if="sc.isChsnFirst(a._id)">
                 <a class="btn btn-primary" ng-click="sc.logAnlst(a.name)">-</a>
               </td>
           </tr>
       </tbody>
-      <h3>This:{{sc.currentUser.sudoPrtfl[indexOf(stock[sc.stock._id])].anlsts.chsnAnlsts}}</h3>
       <!-- THIS IF YOU HAVE THE STOCK -->
-      <tbody ng-if="sc.isStocked(sc.stock._id)">
-          <tr ng-repeat="a in sc.currentUser.sudoPrtfl[indexOf(stock[sc.stock._id])].anlsts.chsnAnlsts">
+      <tbody ng-if="sc.stocked">
+          <tr ng-repeat="a in sc.stock.analysts">
               <td>{{$index + 1}}</td>
               <td><a>{{a.name}}</a></td>
               <td>{{a.target.toFixed(2)}}</td>
               <td>{{a.date}}</td>
-              <!-- <td>
-                <a 
-                  ng-class="sc.isChsn(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
-                  ng-value="sc.isChsn(a._id) ? '+' : '-'" 
-                  ng-click="sc.logAnlst(a.name)"></a>
-              </td> -->
-              <td ng-if="sc.isChsn(a._id)">
-                <a class="btn btn-danger" ng-click="sc.logAnlst(a.name)">-</a>
+              <td>
+                <a
+                  ng-class="sc.isChsnFirst(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
+                  ng-click="sc.rmAnlst({anlst:a._id})">+/-</a>
               </td>
+              <!-- <td ng-if="sc.isChsn(a._id)">
+                <a class="btn btn-danger" ng-click="sc.logAnlst(a.name)">-</a>
+              </td> -->
           </tr>
-          <tr ng-repeat="a in sc.currentUser.sudoPrtfl[indexOf(stock[sc.stock._id])].anlsts.notChsnAnlsts">
+          <!-- ng-value="sc.isChsn(a._id) ? '+' : '-'"  -->
+          <!-- <tr ng-repeat="a in sc.stock.analysts">
               <td>{{$index + 1}}</td>
               <td><a>{{a.name}}</a></td>
               <td>{{a.target.toFixed(2)}}</td>
               <td>{{a.date}}</td>
               <td><a class="btn btn-primary" ng-click="console.log('hi')">+/-</a></td>
-          </tr>
+          </tr> -->
       </tbody>
   </table>
 
