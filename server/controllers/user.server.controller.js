@@ -4,6 +4,14 @@ var
 
 module.exports = {
 
+	portfolio: function(req,res){
+		User.findOne({_id: req.params.id}, '-password').populate('prtfl.stocks','companyName').exec(function(err, user){
+			if(err) return console.log(err)
+			console.log('user:',user.prtfl.stocks);
+			res.json(user.prtfl.stocks)
+		})
+	},
+
   //add a stock
 	addStock: function(req, res){
 		console.log("back end req.body!!!!!!!!!!!!********!!!!!!!!!!!!:",req.params);

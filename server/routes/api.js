@@ -73,6 +73,9 @@ router.route('/:id')
 router.route('/:id/removeStock')
   .delete(userCtrl.removeStock)
 
+router.route('/:id/portfolio')
+  .get(userCtrl.portfolio)
+
 router.route('/:id/addAnlst/:anlst')
   .patch(userCtrl.addAnlst)
 router.route('/:id/rmAnlst/:anlst')

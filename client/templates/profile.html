@@ -10,14 +10,24 @@
       </tr>
     </thead>
 
-    <tbody>
+		<tbody>
+      <tr ng-repeat="s in sc.userPortfolio | filter:searchText track by $index ">
+        <td>{{$index + 1}}</td>
+        <td><a ui-sref="stock({id: s._id})">{{s.companyName}}</a></td>
+        <td>
+          <a class="btn btn-danger" ng-click="sc.removeStock({stock:s._id})">-</a>
+        </td>
+      </tr>
+    </tbody>
+
+    <!-- <tbody>
       <tr ng-repeat="s in main.currentUser.prtfl.stocks | filter:searchText track by $index ">
         <td>{{$index + 1}}</td>
         <td><a ui-sref="stock({id: s})">{{s}}</a></td>
         <td>
-          <a class="btn btn-danger" ng-click="sc.removeStock(s)">-</a>
+          <a class="btn btn-danger" ng-click="sc.removeStock({stock:s})">-</a>
         </td>
       </tr>
-    </tbody>
+    </tbody> -->
   </table>
 </div>

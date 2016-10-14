@@ -119,27 +119,38 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
 
   stockService.index().success(function(results){
   vm.stocks = results
-  //console.log(results);
   })
+  /// ########### CHECK STATE FOR PROFILE AND SET SOME STUFF ############
+  if ($state.current.name == 'profile') {
+    AuthService.getUserStatus()
+      .then(function(data){
+        vm.theUser = data.data.user
+
+      stockService.getUserPortfolio(vm.theUser._id).success(function(results){
+        vm.userPortfolio = results
+        console.log("vm.userPortfolio",vm.userPortfolio)
+      })
+    })
+  }
 
   /// ########### CHECK STATE FOR STOCK AND SET SOME STUFF ############
   if ($state.current.name == 'stock') {
     stockService.show($stateParams.id).success(function(results){
       vm.stock = results
-      // console.log("stock",vm.stock)
+      console.log("stock@@@@",vm.stock)
     })
     AuthService.getUserStatus()
       .then(function(data){
         vm.currentUser = data.data.user
         vm.prtflStockIds = vm.currentUser.prtfl.stocks
         console.log('vm.prtflStockIds',vm.prtflStockIds)
-        vm.currentUser.sudoPrtfl.forEach(function(el,idx) {
-          if (el.stock == vm.stock._id) {
-            vm.loStoPrtfl = el
-          }
-        })
-          console.log('vm.loStoPrtfl',vm.loStoPrtfl)
-        })
+        // vm.currentUser.sudoPrtfl.forEach(function(el,idx) {
+        //   if (el.stock == vm.stock._id) {
+        //     vm.loStoPrtfl = el
+        //   }
+        // })
+        //   console.log('vm.loStoPrtfl',vm.loStoPrtfl)
+      })
 
   // }
 
@@ -160,34 +171,39 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
   }
 
   // find a way to run this after the page loads, it's being called on stockdetails view
-  vm.isStocked = function(stock) {
+  vm.isStocked = function(x) {
     AuthService.getUserStatus()
       .then(function(data){
         vm.currentUser = data.data.user
         vm.prtflStockIds = vm.currentUser.prtfl.stocks
-      if (vm.prtflStockIds.indexOf(stock) == -1) {
-        vm.stocked = false
+        // console.log('stock in isStocked',stock);
+        console.log('vm.prtflStockIds',vm.prtflStockIds);
+        console.log('vm.prtflStockIds.indexOf(vm.stock._id)',vm.prtflStockIds.indexOf(vm.stock._id));
+      if (vm.prtflStockIds.indexOf(vm.stock._id) != -1 || vm.prtflStockIds.indexOf(x) != -1) {
+        vm.stocked = true;
+        console.log('vm.stocked',vm.stocked);
         // return false
       }else{
-        vm.stocked = true
+        vm.stocked = false;
+        console.log('vm.stocked',vm.stocked);
         // return true
       }
     })
   }
-  vm.isStocked(vm.stock._id)
+  vm.isStocked(vm.stock._id) //vm.stock._id
   vm.addStock = function(data) {
       stockService.update(vm.currentUser._id,data).success(function(response) {
         console.log("response from mainCtrl update",response);
         // ##### PUSH NEW STOCK TO LOSTOPRTFL #####
         vm.prtflStockIds.push(response._id)
-        vm.isStocked(data.stock)
+        vm.isStocked(data.stock) //data.stock
       })
     }
 
     vm.removeStock = function(data) {
       stockService.destroy(vm.currentUser._id,data).success(function(response) {
-        vm.prtflStockIds.splice(vm.prtflStockIds.indexOf(stockId),1)
-        vm.isStocked(data.stock)
+        // vm.prtflStockIds.splice(vm.prtflStockIds.indexOf(data.stock),1)
+        vm.isStocked(data.stock) //data.stock
       })
     }
     // vm.allChsn = vm.currentUser.sudoPrtfl.anlsts.chsnAnlsts;

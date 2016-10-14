@@ -30,17 +30,11 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
       template: '<h1>This is page portfolio!</h1>'
     })
     .state('stock', {
-        url: '/stock/:id',
-        templateUrl: 'templates/stock.html',
-        controller: 'stockController as sc',
-        resolve: {
-          user: function(AuthService) {
-            console.log('AuthService.getUserStatus()',AuthService.getUserStatus());
-            return AuthService.getUserStatus();
-          }
-      },
-        restricted: true
-      })
+      url: '/stock/:id',
+      templateUrl: 'templates/stock.html',
+      controller: 'stockController as sc',
+      restricted: true
+    })
     .state('profile', {
       url: '/profile',
       templateUrl: 'templates/profile.html',
