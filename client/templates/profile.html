@@ -15,7 +15,7 @@
         <td>{{$index + 1}}</td>
         <td><a ui-sref="stock({id: s._id})">{{s.companyName}}</a></td>
         <td>
-          <a class="btn btn-danger" ng-click="sc.removeStock({stock:s._id})">-</a>
+          <a class="btn btn-danger" ng-click="sc.removeStock({user:main.currentUser._id, stock:s._id})">-</a>
         </td>
       </tr>
     </tbody>

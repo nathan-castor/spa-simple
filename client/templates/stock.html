@@ -2,8 +2,8 @@
 	<h2>{{ sc.stock.companyName }}</h2>
 </div>
 <div>
-  <h2>StockID:{{ sc.stock._id }}</h2>
-  <h3>sc.stocked: {{sc.stocked}}</h3>
+  <!-- <h2>StockID:{{ sc.stock._id }}</h2>
+  <h3>sc.stocked: {{sc.stocked}}</h3> -->
 </div>
 
 <div class="container">
@@ -26,10 +26,10 @@
               <td ng-if="sc.buySell()"><h4><strong style="color:green;">Buy!</strong></h4></td>
               <td ng-if="!sc.buySell()"><h4><strong style="color:red;">Sell</strong></h4></td>
               <td ng-show="sc.stocked == true">
-                <a class="btn btn-danger" ng-click="sc.removeStock({stock:sc.stock._id}); sc.stocked = false">Remove</a>
+                <a class="btn btn-danger" ng-click="sc.removeStock({user:sc.currentUser._id, stock:sc.stock._id}); sc.stocked = false">Remove</a>
               </td>
               <td ng-show="sc.stocked == false">
-                <a class="btn btn-primary" ng-click="sc.addStock({stock:sc.stock._id}); sc.stocked = true">Add</a>
+                <a class="btn btn-primary" ng-click="sc.addStock({user:sc.currentUser._id,stock:sc.stock._id}); sc.stocked = true">Add</a>
               </td>
           </tr>
       </tbody>
@@ -69,7 +69,7 @@
               <td>
                 <a
                   ng-class="sc.isChsnFirst(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
-                  ng-click="sc.rmAnlst({anlst:a._id})">+/-</a>
+                  ng-click="sc.rmAnlst({user:sc.currentUser._id,anlst:a._id})">+/-</a>
               </td>
               <!-- <td ng-if="sc.isChsn(a._id)">
                 <a class="btn btn-danger" ng-click="sc.logAnlst(a.name)">-</a>
@@ -83,6 +83,33 @@
               <td>{{a.date}}</td>
               <td><a class="btn btn-primary" ng-click="console.log('hi')">+/-</a></td>
           </tr> -->
+      </tbody>
+  </table>
+
+	<table class="table">
+      <thead>
+          <tr>
+              <th>#</th>
+              <th>Analyst</th>
+              <th>Target Price</th>
+              <th>date</th>
+              <th ng-if="sc.stocked">Add/Remove</th>
+          </tr>
+      </thead>
+
+      <!-- THIS IF YOU HAVE THE STOCK -->
+      <tbody ng-if="sc.stocked">
+          <tr ng-repeat="a in sc.stock.analysts">
+              <td>{{$index + 1}}</td>
+              <td><a>{{a.name}}</a></td>
+              <td>{{a.target.toFixed(2)}}</td>
+              <td>{{a.date}}</td>
+              <td>
+                <a
+                  ng-class="sc.isChsnFirst(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
+                  ng-click="sc.rmAnlst({user:sc.currentUser._id,anlst:a._id})">+</a>
+              </td>
+          </tr>
       </tbody>
   </table>
 

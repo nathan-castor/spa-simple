@@ -64,32 +64,37 @@ module.exports = {
 			})
 	},
 	rmAnlst: function(req,res){
-		console.log('req.params.anlst:',req.params.anlst);
+		console.log('req.body:',req.param.anlst);
 		console.log('req.params.id:',req.params.id);
 		User.findOne({_id: req.params.id}, function(err, user){
 			if(err) return console.log("user, error",user,err)
-			console.log("user",user);
+			// console.log("user",user);
 			user.sudoPrtfl.forEach(function(el,idx) {
-				if (el.anlsts.chsnAnlsts.indexOf(req.params.anlst) != -1) {
-					user.sudoPrtfl.anlsts.chsnAnlsts.splice(idx,1)
-					user.sudoPrtfl.anlsts.notChsnAnlysts.push(req.params.anlst)
+				console.log('el.anlsts.chsnAnlsts',el.anlsts.chsnAnlsts);
+				var idxOfAnlst = el.anlsts.chsnAnlsts.indexOf(req.param.anlst)
+				console.log(idx,': idxOfAnlst:',idxOfAnlst);
+				if (idxOfAnlst != -1) {
+					el.anlsts.chsnAnlsts.splice(idxOfAnlst,1)
+					el.anlsts.notChsnAnlysts.push(req.body.anlst)
+					console.log('notChsnAnlysts:',el.anlsts.notChsnAnlysts);
+
+					user.save(function(err, user){
+						if(err) return console.log(err)
+						console.log("moved anlst to notChsnAnlysts");
+						res.json(user)
+					})
 				}
 			})
-			user.save(function(err, user){
-				if(err) return console.log(err)
-				console.log("moved anlst to notChsnAnlysts");
-				res.json(user)
-				})
-			})
+		})
 	},
 	addAnlst: function(req,res){
 		User.findOne({_id: req.params.id}, function(err, user){
 			if(err) return console.log("user, error",user,err)
 			console.log("user",user);
 			user.sudoPrtfl.forEach(function(el,idx) {
-				if (el.anlsts.notChsnAnlsts.indexOf(req.params.anlst) != -1) {
+				if (el.anlsts.notChsnAnlsts.indexOf(req.body.anlst) != -1) {
 					user.sudoPrtfl.anlsts.notChsnAnlsts.splice(idx,1)
-					user.sudoPrtfl.anlsts.chsnAnlysts.push(req.params.anlst)
+					user.sudoPrtfl.anlsts.chsnAnlysts.push(req.body.anlst)
 				}
 			})
 			user.save(function(err, user){

@@ -131,7 +131,9 @@ angular.module('myApp').factory('stockService',
       create: create,
       update: update,
       destroy: destroy,
-      getUserPortfolio:getUserPortfolio
+      getUserPortfolio: getUserPortfolio,
+      addAnlst: addAnlst,
+      rmAnlst: rmAnlst
     })
 
     // factory functions:
@@ -164,18 +166,19 @@ angular.module('myApp').factory('stockService',
       return $http.post(apiUserUrl, data)
     }
 
-    function update(id, data){
-      return $http.patch(apiUserUrl + id, data)
+    function update(data){
+      return $http.patch(apiUserUrl + data.user, data)
     }
 
-    function destroy(id,data){
-      return $http.delete(apiUserUrl + id + '/removestock',data)
+    function destroy(data){
+      return $http.delete(apiUserUrl + data.user + '/removestock',data)
     }
-    function addAnlst(id, data){
-      return $http.patch(apiUserUrl + id + '/addAnlst/'+data)
+    function addAnlst(data){
+      return $http.patch(apiUserUrl + data.user+'/addAnlst',data)
     }
 
-    function rmAnlst(id,data){
-      return $http.delete(apiUserUrl + id + '/rmAnlst/'+data)
+    function rmAnlst(data){
+      console.log('data',data);
+      return $http.delete(apiUserUrl + data.user +'/rmAnlst/'+data.anlst)
     }
 }])

@@ -120,7 +120,22 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
   stockService.index().success(function(results){
   vm.stocks = results
   })
-  /// ########### CHECK STATE FOR PROFILE AND SET SOME STUFF ############
+  vm.addStock = function(data) {
+    stockService.update(data).success(function(response) {
+      console.log("response from mainCtrl update",response);
+      // ##### PUSH NEW STOCK TO LOSTOPRTFL #####
+      vm.prtflStockIds.push(response._id)
+      vm.isStocked(data.stock) //data.stock
+    })
+  }
+
+  vm.removeStock = function(data) {
+    stockService.destroy(data).success(function(response) {
+      // vm.prtflStockIds.splice(vm.prtflStockIds.indexOf(data.stock),1)
+      vm.isStocked(data.stock) //data.stock
+    })
+  }
+  /// ########### CHECK STATE FOR --PROFILE-- AND SET SOME STUFF ############
   if ($state.current.name == 'profile') {
     AuthService.getUserStatus()
       .then(function(data){
@@ -131,19 +146,25 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
         console.log("vm.userPortfolio",vm.userPortfolio)
       })
     })
+    vm.removeStock = function(data) {
+      stockService.destroy(data).success(function(response) {
+        location.reload();
+        // vm.isStocked(data.stock) //data.stock
+      })
+    }
   }
 
   /// ########### CHECK STATE FOR STOCK AND SET SOME STUFF ############
   if ($state.current.name == 'stock') {
     stockService.show($stateParams.id).success(function(results){
       vm.stock = results
-      console.log("stock@@@@",vm.stock)
+      // console.log("stock@@@@",vm.stock)
     })
     AuthService.getUserStatus()
       .then(function(data){
         vm.currentUser = data.data.user
         vm.prtflStockIds = vm.currentUser.prtfl.stocks
-        console.log('vm.prtflStockIds',vm.prtflStockIds)
+        // console.log('vm.prtflStockIds',vm.prtflStockIds)
         // vm.currentUser.sudoPrtfl.forEach(function(el,idx) {
         //   if (el.stock == vm.stock._id) {
         //     vm.loStoPrtfl = el
@@ -152,7 +173,21 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
         //   console.log('vm.loStoPrtfl',vm.loStoPrtfl)
       })
 
-  // }
+      vm.addStock = function(data) {
+        stockService.update(data).success(function(response) {
+          console.log("response from mainCtrl update",response);
+          // ##### PUSH NEW STOCK TO LOSTOPRTFL #####
+          vm.prtflStockIds.push(response._id)
+          vm.isStocked(data.stock) //data.stock
+        })
+      }
+
+      vm.removeStock = function(data) {
+        stockService.destroy(data).success(function(response) {
+          // vm.prtflStockIds.splice(vm.prtflStockIds.indexOf(data.stock),1)
+          vm.isStocked(data.stock) //data.stock
+        })
+      }
 
   vm.buySell = function() {
     //console.log("buySell stock:", vm.stock);
@@ -191,21 +226,7 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
     })
   }
   vm.isStocked(vm.stock._id) //vm.stock._id
-  vm.addStock = function(data) {
-      stockService.update(vm.currentUser._id,data).success(function(response) {
-        console.log("response from mainCtrl update",response);
-        // ##### PUSH NEW STOCK TO LOSTOPRTFL #####
-        vm.prtflStockIds.push(response._id)
-        vm.isStocked(data.stock) //data.stock
-      })
-    }
 
-    vm.removeStock = function(data) {
-      stockService.destroy(vm.currentUser._id,data).success(function(response) {
-        // vm.prtflStockIds.splice(vm.prtflStockIds.indexOf(data.stock),1)
-        vm.isStocked(data.stock) //data.stock
-      })
-    }
     // vm.allChsn = vm.currentUser.sudoPrtfl.anlsts.chsnAnlsts;
     // vm.allNotChsn = vm.currentUser.sudoPrtfl.anlsts.notChsnAnlsts;
 
@@ -224,14 +245,15 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
       $window.alert(anlst)
       console.log('log anlst:',anlst)
     }
-    vm.rmAnlst = function(anlst) {
+    vm.rmAnlst = function(data) {
       // loStoPrtfl
-      stockService.rmAnlst(vm.currentUser._id,anlst._id).success(function(response) {
+      stockService.rmAnlst(data).success(function(response) {
         // WHAT ELSE NEEDS TO HAPPEN?
       })
     }
-    vm.addAnlst = function(anlst) {
-      stockService.addAnlst(vm.currentUser._id,anlst._id).success(function(response) {
+    vm.addAnlst = function(data) {
+      data.stock = vm.stock._id
+      stockService.addAnlst(data).success(function(response) {
       })
     }
     vm.isChsn = function (anlst) {
