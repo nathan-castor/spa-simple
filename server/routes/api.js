@@ -76,15 +76,16 @@ router.route('/:id/removeStock')
 router.route('/:id/portfolio')
   .get(userCtrl.portfolio)
 
-router.route('/:id/addAnlst')
+router.route('/:id/addAnlst/:anlst')
   .patch(userCtrl.addAnlst)
-router.route('/:id/rmAnlst')
-  .delete(userCtrl.rmAnlst)
+router.route('/:id/rmAnlst/:anlstId')
+  .patch(userCtrl.rmAnlst)
 
-// router.route('/:id/addAnlst/:anlst')
+// router.route('/:id/addAnlst')
 //   .patch(userCtrl.addAnlst)
-router.route('/:id/rmAnlst/:anslt')
-  .delete(userCtrl.rmAnlst)
+// router.route('/:id/rmAnlst')
+//   .delete(userCtrl.rmAnlst)
+
 // ////////////////////////////////////////////
 // ////////////////////////////////////////////
 // routes to use the API to get stock information

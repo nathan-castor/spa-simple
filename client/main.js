@@ -1,7 +1,7 @@
 var myApp = angular.module('myApp', ['ui.router'])
 
 myApp.config(function ($stateProvider, $urlRouterProvider) {
-
+// , AuthService, stockService
   $urlRouterProvider.otherwise('/')
 
   $stateProvider
@@ -33,7 +33,24 @@ myApp.config(function ($stateProvider, $urlRouterProvider) {
       url: '/stock/:id',
       templateUrl: 'templates/stock.html',
       controller: 'stockController as sc',
-      restricted: true
+      restricted: true,
+      resolve: 
+      {
+        user: function(AuthService){
+          AuthService.getUserStatus()
+            .then(function(data){
+              var currentUser = data.data.user
+              console.log('currentUser',currentUser);
+              return currentUser
+            }) 
+        }
+        // ,
+        // stock: function (stockService) {
+        //   stockService.show($stateParams.id).success(function(results){
+        //     return results;
+        //   })
+        // }
+      }
     })
     .state('profile', {
       url: '/profile',

@@ -17,8 +17,9 @@ var User = new Schema({
   sudoPrtfl:[
   	// {
   	// 	stock: String,
-  	// 	chsnAnlsts: [],
-  	// 	notChsnAnlsts: []
+  	// 	anlsts:{
+          // chsnAnlsts: [],
+          // notChsnAnlsts: []
   	// }
   ]
 })

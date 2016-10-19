@@ -4,7 +4,7 @@ angular.module('myApp')
   .controller('logoutController', logoutController)
   .controller('registerController', registerController)
   .controller('stockController', stockController)
-
+ 
 
   mainController.$inject = ['$rootScope', '$state', 'AuthService']
   loginController.$inject = ['$state', 'AuthService']
@@ -106,7 +106,7 @@ function registerController($state, AuthService) {
   }
 }
 
-function stockController(stockService, AuthService, $state, $stateParams, $scope, $window){
+function stockController(stockService, AuthService, $state, $stateParams, $scope, $window, user, anlsts){
   var vm = this
   vm.title = "Stock Controller"
   vm.newStock = {}
@@ -139,13 +139,14 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
   if ($state.current.name == 'profile') {
     AuthService.getUserStatus()
       .then(function(data){
-        vm.theUser = data.data.user
+        vm.currentUser = data.data.user
 
-      stockService.getUserPortfolio(vm.theUser._id).success(function(results){
+      stockService.getUserPortfolio(vm.currentUser._id).success(function(results){
         vm.userPortfolio = results
         console.log("vm.userPortfolio",vm.userPortfolio)
       })
     })
+
     vm.removeStock = function(data) {
       stockService.destroy(data).success(function(response) {
         location.reload();
@@ -156,22 +157,26 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
 
   /// ########### CHECK STATE FOR STOCK AND SET SOME STUFF ############
   if ($state.current.name == 'stock') {
+    vm.user = user;
+    vm.anlsts = anlsts;
+    console.log('vm.user,vm.anlsts',vm.user,vm.anlsts);
     stockService.show($stateParams.id).success(function(results){
       vm.stock = results
-      // console.log("stock@@@@",vm.stock)
+      
     })
     AuthService.getUserStatus()
       .then(function(data){
         vm.currentUser = data.data.user
         vm.prtflStockIds = vm.currentUser.prtfl.stocks
-        // console.log('vm.prtflStockIds',vm.prtflStockIds)
-        // vm.currentUser.sudoPrtfl.forEach(function(el,idx) {
-        //   if (el.stock == vm.stock._id) {
-        //     vm.loStoPrtfl = el
-        //   }
-        // })
-        //   console.log('vm.loStoPrtfl',vm.loStoPrtfl)
-      })
+        vm.currentUser.sudoPrtfl.forEach(function (el,idx) {
+          if(el.stock == vm.stock._id){
+            vm.chsnAnlsts = el.anlsts.chsnAnlsts
+            vm.notChsnAnlysts = el.anlsts.notChsnAnlysts
+          }
+        })
+      }) 
+
+      vm.removedAnlts = []
 
       vm.addStock = function(data) {
         stockService.update(data).success(function(response) {
@@ -225,7 +230,7 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
       }
     })
   }
-  vm.isStocked(vm.stock._id) //vm.stock._id
+  vm.isStocked($stateParams.id) //vm.stock._id
 
     // vm.allChsn = vm.currentUser.sudoPrtfl.anlsts.chsnAnlsts;
     // vm.allNotChsn = vm.currentUser.sudoPrtfl.anlsts.notChsnAnlsts;
@@ -245,14 +250,27 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
       $window.alert(anlst)
       console.log('log anlst:',anlst)
     }
-    vm.rmAnlst = function(data) {
-      // loStoPrtfl
+    vm.rmAnlst = function(data, index) {
+      // console.log('data::',data)
+      var data = {
+        userId: vm.currentUser._id,
+        anlstId: data,
+        anlstIdx: index,
+        stockId: vm.stock._id
+      }
       stockService.rmAnlst(data).success(function(response) {
         // WHAT ELSE NEEDS TO HAPPEN?
+        vm.notChsnAnlsts   = response.notChsnAnlsts
+        vm.chsAnalysts     = response.chsnAnlsts
       })
     }
-    vm.addAnlst = function(data) {
-      data.stock = vm.stock._id
+    vm.addAnlst = function(data,index) {
+      var data = {
+        userId: vm.currentUser._id,
+        anlstId: data,
+        anlstIdx: index,
+        stockId: vm.stock._id
+      }
       stockService.addAnlst(data).success(function(response) {
       })
     }

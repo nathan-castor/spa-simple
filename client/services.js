@@ -174,11 +174,11 @@ angular.module('myApp').factory('stockService',
       return $http.delete(apiUserUrl + data.user + '/removestock',data)
     }
     function addAnlst(data){
-      return $http.patch(apiUserUrl + data.user+'/addAnlst',data)
+      return $http.patch(apiUserUrl + data.userId+'/addAnlst'+data.anlstId,data)
     }
 
     function rmAnlst(data){
-      console.log('data',data);
-      return $http.delete(apiUserUrl + data.user +'/rmAnlst/'+data.anlst)
+      // console.log('userId, anlstId',userId, anlstId);
+      return $http.patch(apiUserUrl + data.userId +'/rmAnlst/'+ data.anlstId,data)
     }
 }])

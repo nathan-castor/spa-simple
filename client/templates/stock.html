@@ -7,7 +7,7 @@
 </div>
 
 <div class="container">
-  <table class="table">
+  <table class="table">  
       <thead>
           <tr>
               <th>Stock</th>
@@ -54,35 +54,21 @@
               <td><a>{{a.name}}</a></td>
               <td>{{a.target.toFixed(2)}}</td>
               <td>{{a.date}}</td>
-              <td ng-if="sc.isChsnFirst(a._id)">
-                <a class="btn btn-primary" ng-click="sc.logAnlst(a.name)">-</a>
-              </td>
           </tr>
       </tbody>
-      <!-- THIS IF YOU HAVE THE STOCK -->
+      <!-- THIS IF YOU HAVE THE STOCK chosen analysts-->
       <tbody ng-if="sc.stocked">
-          <tr ng-repeat="a in sc.stock.analysts">
+          <tr ng-repeat="a in sc.chsnAnlsts">
               <td>{{$index + 1}}</td>
-              <td><a>{{a.name}}</a></td>
-              <td>{{a.target.toFixed(2)}}</td>
-              <td>{{a.date}}</td>
+              <td><a>{{a}}</a></td>
+              <!-- <td>{{a.target.toFixed(2)}}</td>
+              <td>{{a.date}}</td> -->
               <td>
                 <a
                   ng-class="sc.isChsnFirst(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
-                  ng-click="sc.rmAnlst({user:sc.currentUser._id,anlst:a._id})">+/-</a>
+                  ng-click="sc.rmAnlst(a, $index)">Remove</a>
               </td>
-              <!-- <td ng-if="sc.isChsn(a._id)">
-                <a class="btn btn-danger" ng-click="sc.logAnlst(a.name)">-</a>
-              </td> -->
           </tr>
-          <!-- ng-value="sc.isChsn(a._id) ? '+' : '-'"  -->
-          <!-- <tr ng-repeat="a in sc.stock.analysts">
-              <td>{{$index + 1}}</td>
-              <td><a>{{a.name}}</a></td>
-              <td>{{a.target.toFixed(2)}}</td>
-              <td>{{a.date}}</td>
-              <td><a class="btn btn-primary" ng-click="console.log('hi')">+/-</a></td>
-          </tr> -->
       </tbody>
   </table>
 
@@ -97,17 +83,17 @@
           </tr>
       </thead>
 
-      <!-- THIS IF YOU HAVE THE STOCK -->
+      <!-- THIS IF YOU HAVE THE STOCK not chosen analysts-->
       <tbody ng-if="sc.stocked">
-          <tr ng-repeat="a in sc.stock.analysts">
+          <tr ng-repeat="a in sc.stock.notChsnAnlysts">
               <td>{{$index + 1}}</td>
-              <td><a>{{a.name}}</a></td>
-              <td>{{a.target.toFixed(2)}}</td>
-              <td>{{a.date}}</td>
+              <td><a>{{a}}</a></td>
+              <!-- <td>{{a.target.toFixed(2)}}</td>
+              <td>{{a.date}}</td> -->
               <td>
                 <a
                   ng-class="sc.isChsnFirst(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
-                  ng-click="sc.rmAnlst({user:sc.currentUser._id,anlst:a._id})">+</a>
+                  ng-click="sc.addAnlst(a, $index)">Add</a>
               </td>
           </tr>
       </tbody>

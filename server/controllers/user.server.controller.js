@@ -1,7 +1,7 @@
 var
 	User = require('../models/User.js'),
 	Stock = require('../models/Stock.js')
-
+ 
 module.exports = {
 
 	portfolio: function(req,res){
@@ -10,7 +10,7 @@ module.exports = {
 			console.log('user:',user.prtfl.stocks);
 			res.json(user.prtfl.stocks)
 		})
-	},
+	}, 
 
   //add a stock
 	addStock: function(req, res){
@@ -29,7 +29,7 @@ module.exports = {
 							anltsList.push(anlst._id)
 						})
 						console.log('newstock',newstock)
-						user.sudoPrtfl.push({stock:newstock._id,anlsts:{chsnAnlsts:anltsList, notChsnAnlysts:[]}})
+						user.sudoPrtfl.push({stock:newstock._id,anlsts:{chsnAnlsts:anltsList, notChsnAnlsts:[]}})
 						user.save(function(err, user){
 							if(err) return console.log(err)
 							console.log("successfully added stock!!!!", user);
@@ -64,45 +64,58 @@ module.exports = {
 			})
 	},
 	rmAnlst: function(req,res){
-		console.log('req.body:',req.param.anlst);
-		console.log('req.params.id:',req.params.id);
+		console.log('req.body',req.body);
+		var anlstId = req.params.anlstId;
+		var userId = req.params.id;
+		var sudoPrtflIdx;
+		var chosenIdx = req.body.anlstIdx
+
 		User.findOne({_id: req.params.id}, function(err, user){
 			if(err) return console.log("user, error",user,err)
-			// console.log("user",user);
-			user.sudoPrtfl.forEach(function(el,idx) {
-				console.log('el.anlsts.chsnAnlsts',el.anlsts.chsnAnlsts);
-				var idxOfAnlst = el.anlsts.chsnAnlsts.indexOf(req.param.anlst)
-				console.log(idx,': idxOfAnlst:',idxOfAnlst);
-				if (idxOfAnlst != -1) {
-					el.anlsts.chsnAnlsts.splice(idxOfAnlst,1)
-					el.anlsts.notChsnAnlysts.push(req.body.anlst)
-					console.log('notChsnAnlysts:',el.anlsts.notChsnAnlysts);
 
-					user.save(function(err, user){
-						if(err) return console.log(err)
-						console.log("moved anlst to notChsnAnlysts");
-						res.json(user)
-					})
+			user.sudoPrtfl.forEach(function(el,idx) {
+				if (el.stock == req.body.stockId) {
+					sudoPrtflIdx = idx;
 				}
+			}) // END OF fIRST FOR EACH
+
+			// MOVE ANLST FROM CHSN TO NOTCHSN
+			user.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts.splice(chosenIdx,1);
+			user.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts.push(anlstId);
+
+			user.save(function(err, updatedUser){
+				if(err) return console.log(err)
+				console.log("updatedUser.sudoPrtfl[0]",updatedUser.sudoPrtfl[0]);
+				res.json(updatedUser);
 			})
-		})
+		}) // END FIND USER
 	},
 	addAnlst: function(req,res){
+		console.log('req.body',req.body);
+		var anlstId = req.params.anlstId;
+		var userId = req.params.id;
+		var sudoPrtflIdx;
+		var chosenIdx = req.body.anlstIdx
+
 		User.findOne({_id: req.params.id}, function(err, user){
 			if(err) return console.log("user, error",user,err)
-			console.log("user",user);
+
 			user.sudoPrtfl.forEach(function(el,idx) {
-				if (el.anlsts.notChsnAnlsts.indexOf(req.body.anlst) != -1) {
-					user.sudoPrtfl.anlsts.notChsnAnlsts.splice(idx,1)
-					user.sudoPrtfl.anlsts.chsnAnlysts.push(req.body.anlst)
+				if (el.stock == req.body.stockId) {
+					sudoPrtflIdx = idx;
 				}
-			})
-			user.save(function(err, user){
+			}) // END OF fIRST FOR EACH
+
+			// MOVE ANLST FROM CHSN TO NOTCHSN
+			user.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts.splice(chosenIdx,1);
+			user.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts.push(anlstId);
+
+			user.save(function(err, updatedUser){
 				if(err) return console.log(err)
-				console.log("moved anlst to notChsnAnlysts");
-				res.json(user)
-				})
+				console.log("updatedUser.sudoPrtfl[0]",updatedUser.sudoPrtfl[0]);
+				res.json(updatedUser);
 			})
+		}) // END FIND USER
 	},
 
 	// delete a user
