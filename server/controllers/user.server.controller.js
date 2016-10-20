@@ -70,7 +70,7 @@ module.exports = {
 		var sudoPrtflIdx;
 		var chosenIdx = req.body.anlstIdx
 
-		User.findOne({_id: req.params.id}, function(err, user){
+		User.findOne({_id: userId}, function(err, user){
 			if(err) return console.log("user, error",user,err)
 
 			user.sudoPrtfl.forEach(function(el,idx) {
@@ -110,10 +110,14 @@ module.exports = {
 			user.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts.splice(chosenIdx,1);
 			user.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts.push(anlstId);
 
-			user.save(function(err, updatedUser){
-				if(err) return console.log(err)
-				console.log("updatedUser.sudoPrtfl[0]",updatedUser.sudoPrtfl[0]);
-				res.json(updatedUser);
+			// user.save(function(err, updatedUser){
+			// 	if(err) return console.log(err)
+			// 	console.log("updatedUser.sudoPrtfl[0]",updatedUser.sudoPrtfl[0]);
+			// 	res.json(updatedUser);
+			// })
+
+			user.update({_id: userId}, {$push: {chsnAnlsts: anlstId}}, function(err, result) {
+				console.log(result);
 			})
 		}) // END FIND USER
 	},

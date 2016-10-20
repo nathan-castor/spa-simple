@@ -260,6 +260,7 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
       }
       stockService.rmAnlst(data).success(function(response) {
         // WHAT ELSE NEEDS TO HAPPEN?
+        console.log('response',response);
         vm.notChsnAnlsts   = response.notChsnAnlsts
         vm.chsAnalysts     = response.chsnAnlsts
       })
