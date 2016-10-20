@@ -133,7 +133,8 @@ angular.module('myApp').factory('stockService',
       destroy: destroy,
       getUserPortfolio: getUserPortfolio,
       addAnlst: addAnlst,
-      rmAnlst: rmAnlst
+      rmAnlst: rmAnlst,
+      getUserPsudoPortfolio:getUserPsudoPortfolio
     })
 
     // factory functions:
@@ -160,6 +161,10 @@ angular.module('myApp').factory('stockService',
     function getUserPortfolio(id){
       //console.log("stock service show running");
       return $http.get(apiUserUrl + id + '/portfolio')
+    }
+    function getUserPsudoPortfolio(id){
+      //console.log("stock service show running");
+      return $http.get(apiUserUrl + id + '/psudoportfolio')
     }
 
     function create(data){

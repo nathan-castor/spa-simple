@@ -60,9 +60,9 @@
       <tbody ng-if="sc.stocked">
           <tr ng-repeat="a in sc.chsnAnlsts">
               <td>{{$index + 1}}</td>
-              <td><a>{{a}}</a></td>
-              <!-- <td>{{a.target.toFixed(2)}}</td>
-              <td>{{a.date}}</td> -->
+              <td><a>{{a.name}}</a></td>
+              <td>{{a.target.toFixed(2)}}</td> <!-- .target.toFixed(2) -->
+              <td>{{a.date}}</td> <!-- .date -->
               <td>
                 <a
                   ng-class="sc.isChsnFirst(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
@@ -88,9 +88,9 @@
         <tbody ng-if="sc.stocked">
             <tr ng-repeat="a in sc.notChsnAnlsts">
                 <td>{{$index + 1}}</td>
-                <td><a>{{a}}</a></td>
-                <!-- <td>{{a.target.toFixed(2)}}</td>
-                <td>{{a.date}}</td> -->
+                <td><a>{{a.name}}</a></td>
+                <td>{{a.target.toFixed(2)}}</td>
+                <td>{{a.date}}</td>
                 <td>
                   <a
                     ng-class="sc.isChsnFirst(a._id) ? 'btn btn-primary' : 'btn btn-primary'"

@@ -167,14 +167,30 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
         .then(function(data){
           vm.currentUser = data.data.user
           vm.prtflStockIds = vm.currentUser.prtfl.stocks
-          vm.currentUser.sudoPrtfl.forEach(function (el,idx) {
+
+          // stockService.getUserPsudoPortfolio(vm.currentUser._id).success(function(results){
+          //   console.log('resulst',results);
+          //   vm.userPsudoPrtfl = results
+          //   vm.userPsudoPrtfl.forEach(function (el,idx) {
+          //     if (el.stock == vm.stock._id) {
+          //       vm.chsnAnlsts = el.anlsts.chsnAnlsts
+          //       vm.notChsnAnlsts = el.anlsts.notChsnAnlsts
+          //     }
+          //   })
+          // })
+
+          // add a hook for save and fetch
+
+
+          vm.currentUser.psudoPrtfl.forEach(function (el,idx) {
             if (el.stock == vm.stock._id) {
               vm.chsnAnlsts = el.anlsts.chsnAnlsts
               vm.notChsnAnlsts = el.anlsts.notChsnAnlsts
             }
           })
-        })
-    })
+
+        }) // END GETUSERSTATUS
+    }) // END STOCKSERVICE SHOW
 
       vm.removedAnlts = []
 
@@ -232,8 +248,8 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
   }
   vm.isStocked($stateParams.id) //vm.stock._id
 
-    // vm.allChsn = vm.currentUser.sudoPrtfl.anlsts.chsnAnlsts;
-    // vm.allNotChsn = vm.currentUser.sudoPrtfl.anlsts.notChsnAnlsts;
+    // vm.allChsn = vm.currentUser.psudoPrtfl.anlsts.chsnAnlsts;
+    // vm.allNotChsn = vm.currentUser.psudoPrtfl.anlsts.notChsnAnlsts;
 
     vm.aveTGT = function (thisAnlst) {
       var totalTGT = 0;

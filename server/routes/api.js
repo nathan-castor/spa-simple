@@ -75,16 +75,14 @@ router.route('/:id/removeStock')
 
 router.route('/:id/portfolio')
   .get(userCtrl.portfolio)
+router.route('/:id/psudoportfolio')
+  .get(userCtrl.psudoportfolio)
 
 router.route('/:id/addAnlst/:anlstId')
   .patch(userCtrl.addAnlst)
 router.route('/:id/rmAnlst/:anlstId')
   .patch(userCtrl.rmAnlst)
 
-// router.route('/:id/addAnlst')
-//   .patch(userCtrl.addAnlst)
-// router.route('/:id/rmAnlst')
-//   .delete(userCtrl.rmAnlst)
 
 // ////////////////////////////////////////////
 // ////////////////////////////////////////////

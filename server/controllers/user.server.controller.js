@@ -5,12 +5,19 @@ var
 module.exports = {
 
 	portfolio: function(req,res){
-		User.findOne({_id: req.params.id}, '-password').populate('prtfl.stocks','companyName').exec(function(err, user){
+		User.findOne({_id: req.params.id}).populate('prtfl.stocks','companyName').exec(function(err, user){
 			if(err) return console.log(err)
 			console.log('user:',user.prtfl.stocks);
 			res.json(user.prtfl.stocks)
 		})
-	}, 
+	},
+	psudoportfolio: function(req,res){
+		User.findOne({_id: req.params.id}).populate('psudoPrtfl.anlsts').exec(function(err, user){
+			if(err) return console.log(err)
+			console.log('user:',user.psudoPrtfl.anlsts);
+			res.json(user.psudoPrtfl)
+		})
+	},  
 
   //add a stock
 	addStock: function(req, res){
@@ -18,18 +25,19 @@ module.exports = {
 			User.findOne({_id: req.params.id}, function(err, user){
 				console.log('user', user)
 				if(err) return console.log(err)
-				//res.json({userPortfolioResult: user.portfolio.indexOf(req.body.stock)})
-				//if (user.portfolio.indexOf(req.body.stock) == -1)
+
 					Stock.findOne({_id: req.body.stock}, function(err, newstock){
 						if(err) return console.log(err)
 						// console.log('newstock',newstock)
 						user.prtfl.stocks.push(newstock)
 						var anltsList = []
 						newstock.analysts.forEach(function(anlst) {
-							anltsList.push(anlst._id)
+							anltsList.push(anlst)
 						})
+
 						console.log('newstock',newstock)
-						user.sudoPrtfl.push({stock:newstock._id,anlsts:{chsnAnlsts:anltsList, notChsnAnlsts:[]}})
+						user.psudoPrtfl.push({stock:newstock._id,anlsts:{chsnAnlsts:anltsList, notChsnAnlsts:[]}})
+						
 						user.save(function(err, user){
 							if(err) return console.log(err)
 							console.log("successfully added stock!!!!", user);
@@ -49,12 +57,12 @@ module.exports = {
 			user.prtfl.stocks.splice(user.prtfl.stocks.indexOf(req.body.stock),1)
 
 			var stockIndex = -1;
-			user.sudoPrtfl.forEach(function(el,idx) {
+			user.psudoPrtfl.forEach(function(el,idx) {
 				if (el.stock == req.body.stock) {
 					stockIndex = idx;
 				}
 			})
-			user.sudoPrtfl.splice(stockIndex,1)
+			user.psudoPrtfl.splice(stockIndex,1)
 
 			user.save(function(err, user){
 				if(err) return console.log(err)
@@ -67,28 +75,28 @@ module.exports = {
 		console.log('req.body',req.body);
 		var anlstId = req.params.anlstId;
 		var userId = req.params.id;
-		var sudoPrtflIdx;
+		var psudoPrtflIdx;
 		var chosenIdx = req.body.anlstIdx
 
 		User.findOne({_id: userId}, function(err, user){
 			if(err) return console.log("user, error",user,err)
 
-			user.sudoPrtfl.forEach(function(el,idx) {
+			user.psudoPrtfl.forEach(function(el,idx) {
 				if (el.stock == req.body.stockId) {
-					sudoPrtflIdx = idx;
+					psudoPrtflIdx = idx;
 				}
 			}) // END OF fIRST FOR EACH
 
 			// MOVE ANLST FROM CHSN TO NOTCHSN
-			var removedAnlsts = user.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts.splice(chosenIdx,1);
-			user.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts.push(removedAnlsts[0]);
+			var removedAnlsts = user.psudoPrtfl[psudoPrtflIdx].anlsts.chsnAnlsts.splice(chosenIdx,1);
+			user.psudoPrtfl[psudoPrtflIdx].anlsts.notChsnAnlsts.push(removedAnlsts[0]);
 
 			user.save(function(err, updatedUser){
 				if(err) return console.log(err)
-				console.log("updatedUser.sudoPrtfl[0]",updatedUser.sudoPrtfl[0]);
+				console.log("updatedUser.psudoPrtfl[0]",updatedUser.psudoPrtfl[0]);
 				res.json({
-					chsnAnlsts    : updatedUser.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts,
-					notChsnAnlsts : updatedUser.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts
+					chsnAnlsts    : updatedUser.psudoPrtfl[psudoPrtflIdx].anlsts.chsnAnlsts,
+					notChsnAnlsts : updatedUser.psudoPrtfl[psudoPrtflIdx].anlsts.notChsnAnlsts
 				});
 			})
 		}) // END FIND USER
@@ -97,28 +105,28 @@ module.exports = {
 		console.log('req.body',req.body);
 		var anlstId = req.params.anlstId;
 		var userId = req.params.id;
-		var sudoPrtflIdx;
+		var psudoPrtflIdx;
 		var chosenIdx = req.body.anlstIdx
 
 		User.findOne({_id: req.params.id}, function(err, user){
 			if(err) return console.log("user, error",user,err)
 
-			user.sudoPrtfl.forEach(function(el,idx) {
+			user.psudoPrtfl.forEach(function(el,idx) {
 				if (el.stock == req.body.stockId) {
-					sudoPrtflIdx = idx;
+					psudoPrtflIdx = idx;
 				}
 			}) // END OF fIRST FOR EACH
 
 			// MOVE ANLST FROM CHSN TO NOTCHSN
-			var removedAnlsts = user.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts.splice(chosenIdx,1);
-			user.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts.push(removedAnlsts[0]);
+			var removedAnlsts = user.psudoPrtfl[psudoPrtflIdx].anlsts.notChsnAnlsts.splice(chosenIdx,1);
+			user.psudoPrtfl[psudoPrtflIdx].anlsts.chsnAnlsts.push(removedAnlsts[0]);
 
 			user.save(function(err, updatedUser){
 				if(err) return console.log(err)
-				console.log("updatedUser.sudoPrtfl[0]",updatedUser.sudoPrtfl[0]);
+				console.log("updatedUser.psudoPrtfl[0]",updatedUser.psudoPrtfl[0]);
 				res.json({
-					chsnAnlsts    : updatedUser.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts,
-					notChsnAnlsts : updatedUser.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts
+					chsnAnlsts    : updatedUser.psudoPrtfl[psudoPrtflIdx].anlsts.chsnAnlsts,
+					notChsnAnlsts : updatedUser.psudoPrtfl[psudoPrtflIdx].anlsts.notChsnAnlsts
 				});
 			})
 		}) // END FIND USER
