@@ -270,8 +270,11 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
         anlstIdx: index,
         stockId: vm.stock._id
       }
-      stockService.addAnlst(data).success(function(response) {
-      })
+      stockService.addAnlst(data)
+      .success(function(response) {
+          vm.notChsnAnlsts   = response.notChsnAnlsts
+          vm.chsnAnlsts     = response.chsnAnlsts
+        })
     }
     vm.isChsn = function (anlst) {
 

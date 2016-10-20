@@ -174,7 +174,7 @@ angular.module('myApp').factory('stockService',
       return $http.delete(apiUserUrl + data.user + '/removestock',data)
     }
     function addAnlst(data){
-      return $http.patch(apiUserUrl + data.userId+'/addAnlst'+data.anlstId,data)
+      return $http.patch(apiUserUrl + data.userId+'/addAnlst/'+data.anlstId,data)
     }
 
     function rmAnlst(data){

@@ -1,10 +1,10 @@
-var express = require('express')
-var router = express.Router()
-var passport = require('passport')
+var express = require('express');
+var router = express.Router();
+var passport = require('passport');
 
-var User = require('../models/User.js')
-var stockCtrl = require('../controllers/stock.server.controller.js')
-var userCtrl = require('../controllers/user.server.controller.js')
+var User = require('../models/User.js');
+var stockCtrl = require('../controllers/stock.server.controller.js');
+var userCtrl = require('../controllers/user.server.controller.js');
 
 router.post('/register', function(req, res) {
   User.register(new User({ username: req.body.username }),
@@ -76,7 +76,7 @@ router.route('/:id/removeStock')
 router.route('/:id/portfolio')
   .get(userCtrl.portfolio)
 
-router.route('/:id/addAnlst/:anlst')
+router.route('/:id/addAnlst/:anlstId')
   .patch(userCtrl.addAnlst)
 router.route('/:id/rmAnlst/:anlstId')
   .patch(userCtrl.rmAnlst)
