@@ -72,31 +72,33 @@
       </tbody>
   </table>
 
-	<table class="table">
-      <thead>
-          <tr>
-              <th>#</th>
-              <th>Analyst</th>
-              <th>Target Price</th>
-              <th>date</th>
-              <th ng-if="sc.stocked">Add/Remove</th>
-          </tr>
-      </thead>
+  <div ng-if="sc.notChsnAnlsts.length > 0">
+  	<table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Analyst</th>
+                <th>Target Price</th>
+                <th>date</th>
+                <th ng-if="sc.stocked">Add/Remove</th>
+            </tr>
+        </thead>
 
-      <!-- THIS IF YOU HAVE THE STOCK not chosen analysts-->
-      <tbody ng-if="sc.stocked">
-          <tr ng-repeat="a in sc.stock.notChsnAnlysts">
-              <td>{{$index + 1}}</td>
-              <td><a>{{a}}</a></td>
-              <!-- <td>{{a.target.toFixed(2)}}</td>
-              <td>{{a.date}}</td> -->
-              <td>
-                <a
-                  ng-class="sc.isChsnFirst(a._id) ? 'btn btn-danger' : 'btn btn-primary'"
-                  ng-click="sc.addAnlst(a, $index)">Add</a>
-              </td>
-          </tr>
-      </tbody>
-  </table>
+        <!-- THIS IF YOU HAVE THE STOCK not chosen analysts-->
+        <tbody ng-if="sc.stocked">
+            <tr ng-repeat="a in sc.notChsnAnlsts">
+                <td>{{$index + 1}}</td>
+                <td><a>{{a}}</a></td>
+                <!-- <td>{{a.target.toFixed(2)}}</td>
+                <td>{{a.date}}</td> -->
+                <td>
+                  <a
+                    ng-class="sc.isChsnFirst(a._id) ? 'btn btn-primary' : 'btn btn-primary'"
+                    ng-click="sc.addAnlst(a, $index)">Add</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>    
+  </div>
 
 </div>

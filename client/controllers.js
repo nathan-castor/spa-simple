@@ -118,7 +118,7 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
   // GET USER WAS HERE //
 
   stockService.index().success(function(results){
-  vm.stocks = results
+    vm.stocks = results
   })
   vm.addStock = function(data) {
     stockService.update(data).success(function(response) {
@@ -162,19 +162,19 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
     console.log('vm.user,vm.anlsts',vm.user,vm.anlsts);
     stockService.show($stateParams.id).success(function(results){
       vm.stock = results
-      
-    })
-    AuthService.getUserStatus()
-      .then(function(data){
-        vm.currentUser = data.data.user
-        vm.prtflStockIds = vm.currentUser.prtfl.stocks
-        vm.currentUser.sudoPrtfl.forEach(function (el,idx) {
-          if(el.stock == vm.stock._id){
-            vm.chsnAnlsts = el.anlsts.chsnAnlsts
-            vm.notChsnAnlysts = el.anlsts.notChsnAnlysts
-          }
+
+      AuthService.getUserStatus()
+        .then(function(data){
+          vm.currentUser = data.data.user
+          vm.prtflStockIds = vm.currentUser.prtfl.stocks
+          vm.currentUser.sudoPrtfl.forEach(function (el,idx) {
+            if (el.stock == vm.stock._id) {
+              vm.chsnAnlsts = el.anlsts.chsnAnlsts
+              vm.notChsnAnlsts = el.anlsts.notChsnAnlsts
+            }
+          })
         })
-      }) 
+    })
 
       vm.removedAnlts = []
 
@@ -251,19 +251,17 @@ function stockController(stockService, AuthService, $state, $stateParams, $scope
       console.log('log anlst:',anlst)
     }
     vm.rmAnlst = function(data, index) {
-      // console.log('data::',data)
       var data = {
         userId: vm.currentUser._id,
         anlstId: data,
         anlstIdx: index,
         stockId: vm.stock._id
       }
-      stockService.rmAnlst(data).success(function(response) {
-        // WHAT ELSE NEEDS TO HAPPEN?
-        console.log('response',response);
-        vm.notChsnAnlsts   = response.notChsnAnlsts
-        vm.chsAnalysts     = response.chsnAnlsts
-      })
+      stockService.rmAnlst(data)
+        .success(function(response) {
+          vm.notChsnAnlsts   = response.notChsnAnlsts
+          vm.chsnAnlsts     = response.chsnAnlsts
+        })
     }
     vm.addAnlst = function(data,index) {
       var data = {

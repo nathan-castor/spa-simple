@@ -80,13 +80,16 @@ module.exports = {
 			}) // END OF fIRST FOR EACH
 
 			// MOVE ANLST FROM CHSN TO NOTCHSN
-			user.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts.splice(chosenIdx,1);
-			user.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts.push(anlstId);
+			var removedAnlsts = user.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts.splice(chosenIdx,1);
+			user.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts.push(removedAnlsts[0]);
 
 			user.save(function(err, updatedUser){
 				if(err) return console.log(err)
 				console.log("updatedUser.sudoPrtfl[0]",updatedUser.sudoPrtfl[0]);
-				res.json(updatedUser);
+				res.json({
+					chsnAnlsts    : updatedUser.sudoPrtfl[sudoPrtflIdx].anlsts.chsnAnlsts,
+					notChsnAnlsts : updatedUser.sudoPrtfl[sudoPrtflIdx].anlsts.notChsnAnlsts
+				});
 			})
 		}) // END FIND USER
 	},

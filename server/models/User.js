@@ -14,13 +14,14 @@ var User = new Schema({
       autopopulate: true
     }]
   },
-  sudoPrtfl:[
-  	// {
-  	// 	stock: String,
-  	// 	anlsts:{
-          // chsnAnlsts: [],
-          // notChsnAnlsts: []
-  	// }
+  sudoPrtfl: [
+  	{
+  		stock  : String,
+  		anlsts :{
+        chsnAnlsts    : [],
+        notChsnAnlsts : []
+  	   }
+    }
   ]
 })
 
